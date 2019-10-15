@@ -108,13 +108,6 @@ func (cfg *Config) getCertificate(hello *tls.ClientHelloInfo) (cert Certificate,
 		}
 
 		// fall back to a "default" certificate, if specified
-		if cfg.DefaultServerName != "" {
-			normDefault := NormalizedName(cfg.DefaultServerName)
-			cert, defaulted = cfg.selectCert(hello, normDefault)
-			if defaulted {
-				return
-			}
-		}
 	} else {
 		// if SNI is specified, try an exact match first
 		cert, matched = cfg.selectCert(hello, name)
@@ -151,18 +144,23 @@ func (cfg *Config) getCertificate(hello *tls.ClientHelloInfo) (cert Certificate,
 			return
 		}
 	}
-	
+
 	// If there hasn't been any certificate found, fallback to the default cert
 	if !matched {
-    		// fall back to a "default" certificate, if specified
-    		if cfg.DefaultServerName != "" {
-      			normDefault := NormalizedName(cfg.DefaultServerName)
-      			cert, defaulted = cfg.selectCert(hello, normDefault)
-      			if defaulted {
-        			return
-      			}
-    		}
-  	}
+		// fall back to a "default" certificate, if specified
+		if cfg.DefaultServerName != "" {
+			normDefault := NormalizedName(cfg.DefaultServerName)
+			cert, defaulted = cfg.selectCert(hello, normDefault)
+			if defaulted {
+				return
+			}
+		} else {
+			cert, defaulted = cfg.certCache.getAnyCert(name)
+			if defaulted {
+				return
+			}
+		}
+	}
 
 	// otherwise, we're bingo on ammo; see issues
 	// mholt/caddy#2035 and mholt/caddy#1303 (any

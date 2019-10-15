@@ -223,6 +223,12 @@ func (certCache *Cache) replaceCertificate(oldCert, newCert Certificate) {
 	certCache.mu.Unlock()
 }
 
+func (certCache *Cache) getAnyCert(name string) (Certificate, bool) {
+	for k, _ := range certCache.cacheIndex {
+		return certCache.getFirstMatchingCert(k)
+	}
+}
+
 func (certCache *Cache) getFirstMatchingCert(name string) (Certificate, bool) {
 	all := certCache.getAllMatchingCerts(name)
 	if len(all) == 0 {
