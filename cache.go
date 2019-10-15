@@ -224,8 +224,8 @@ func (certCache *Cache) replaceCertificate(oldCert, newCert Certificate) {
 }
 
 func (certCache *Cache) getAnyCert(name string) (Certificate, bool) {
-	for k, _ := range certCache.cacheIndex {
-		return certCache.getFirstMatchingCert(k)
+	for _, cert := range certCache.cache {
+		return cert, true
 	}
 	return Certificate{}, false
 }
