@@ -1,4 +1,4 @@
-module github.com/mholt/certmagic
+module github.com/julsemaan/certmagic
 
 require (
 	github.com/cenkalti/backoff v2.1.1+incompatible // indirect
