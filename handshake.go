@@ -155,6 +155,7 @@ func (cfg *Config) getCertificate(hello *tls.ClientHelloInfo) (cert Certificate,
 				return
 			}
 		} else {
+			fmt.Println("Getting any certificate as default certificate")
 			cert, defaulted = cfg.certCache.getAnyCert(name)
 			if defaulted {
 				return
